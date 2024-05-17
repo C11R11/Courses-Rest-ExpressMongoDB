@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 dotenv.config({ path: "./config.env" });
 import crypto from "crypto"
+import { IAlbum } from "../src/types/models";
 
 let originalData;
 
@@ -40,19 +41,23 @@ describe("Health checks", () => {
 
 describe("Album CRUD", () => {
   let id_new: string;
-  let fake_album = {
+  let fake_album: IAlbum = {
     title: "SupertestJest!" + crypto.randomUUID(),
     artist: "SupertestJest" + crypto.randomUUID(),
     genre: "Supertest",
     year: 2024,
     tracks: ["Supertest"],
     label: "Supertest",
+    imageCover: "asdasd",
+    images: ["asd"],
+    ratingsAverage: 1,
+    ratingsQuantity: 0,
+    //createdAt: "2002-12-09",
     selling_information: {
       certifications: "No info",
       sales: "No info",
     },
     singles: ["Supertest"],
-    __v: 0
   };
   const patched_name = "SupertestJestPatched" + crypto.randomUUID();
 
@@ -79,7 +84,9 @@ describe("Album CRUD", () => {
       .expect("Content-Type", /json/)
       .expect(200)
       .then((response) => {
-        const expected = Object.assign({ _id: id_new }, fake_album);
+        console.log("GET the new album data-->", response.body.data[0]);
+        const expected = Object.assign({ _id: id_new, __v: 0}, fake_album);
+        console.log("fake modified-->", response.body.data[0]);
         expect(response.body.data[0]).toEqual(expected);
       });
   });
@@ -109,10 +116,7 @@ describe("Album CRUD", () => {
       .expect("Content-Type", /json/)
       .expect(200)
       .then((response) => {
-        let expected = Object.assign(
-          { _id: id_new},
-          fake_album
-        );
+        let expected = Object.assign({ _id: id_new, __v: 0 }, fake_album);
         expected.title = patched_name;
         console.log("PATCH the new album data ->", expected);
         console.log("response.body.data-->", response.body.data);

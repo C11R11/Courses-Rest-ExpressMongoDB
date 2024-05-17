@@ -1,26 +1,8 @@
 import mongoose from "mongoose";
-
-interface IAlbumSchema {
-  artist: String;
-  genre: String;
-  label: String;
-  selling_information: {
-    certifications: String;
-    sales: String;
-  };
-  singles: [String];
-  ratingsAverage: Number;
-  ratingsQuantity: Number;
-  imageCover: String;
-  images: [String];
-  createdAt: Date;
-  title: String;
-  tracks: [String];
-  year: Number;
-}
+import {IAlbum} from "../types/models"
 
 class AlbumModel {
-  albumSchema = new mongoose.Schema<IAlbumSchema>({
+  albumSchema = new mongoose.Schema<IAlbum>({
     artist: {
       type: String,
       required: [true, "It's needed an artist?"],
@@ -43,11 +25,11 @@ class AlbumModel {
       required: [true, "A tour must have a cover image"],
     },
     images: [String],
-    createdAt: {
+    /* createdAt: {
       type: Date,
       default: new Date(Date.now()),
       select: false,
-    },
+    }, */
     ratingsAverage: {
       type: Number,
       default: 3,
@@ -61,13 +43,13 @@ class AlbumModel {
     tracks: [String],
     year: Number,
   });
-  albumModel: mongoose.Model<IAlbumSchema>;
+  albumModel: mongoose.Model<IAlbum>;
 
   constructor() {
     this.albumModel = mongoose.model("Album", this.albumSchema);
   }
 
-  public async CreateAlbum(obj: IAlbumSchema) {
+  public async CreateAlbum(obj: IAlbum) {
     console.log("creating album....");
     try {
       const newModel = await this.albumModel.create(obj);
@@ -81,6 +63,7 @@ class AlbumModel {
     console.log("GetAlbum album....");
     try {
       const findModel = await this.albumModel.find({ _id: id }).exec();
+      console.log(findModel);
       return findModel;
     } catch (err) {
       throw err;
@@ -107,10 +90,7 @@ class AlbumModel {
     }
   }
 
-  public async UpdateAlbum(
-    id: String,
-    obj: mongoose.UpdateQuery<IAlbumSchema>
-  ) {
+  public async UpdateAlbum(id: String, obj: mongoose.UpdateQuery<IAlbum>) {
     console.log("UpdateAlbum album....");
     try {
       const findModel = await this.albumModel.findByIdAndUpdate(id, obj).exec();
@@ -143,7 +123,7 @@ async function main() {
     },
     imageCover: "asdasd",
     images: ["asd"],
-    createdAt: new Date(Date.now()),
+    //createdAt: new Date(Date.now()).toISOString(), 
     singles: ["Supertest"],
   });
 

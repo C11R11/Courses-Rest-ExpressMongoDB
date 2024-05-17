@@ -3,8 +3,8 @@ import fs from "fs";
 let users = [];
 
 function SyncDB() {
-  console.log("Sync the db");
-  users = JSON.parse(fs.readFileSync("data/users.json").toString());
+ // console.log("Sync the db");
+ // users = JSON.parse(fs.readFileSync("data/users.json").toString());
 }
 
 function SaveDBToJson(jsonToSave) {
@@ -15,6 +15,7 @@ SyncDB();
 
 function GetUser(req, res) {
   const user = users.find((x: { _id: string }) => x._id == req.params.id);
+  console.log("GetUser->",  user);
 
   if (typeof user != "undefined") {
     res.status(200).json({

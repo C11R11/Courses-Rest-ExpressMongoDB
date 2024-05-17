@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "ts-node ./src/index.ts",
+    "dev": "nodemon ./src/index.ts",
     "clrun": "npm run build && node ./dist/index.js",
     "build": "tsc",
     "test": "jest --verbose --detectOpenHandles",

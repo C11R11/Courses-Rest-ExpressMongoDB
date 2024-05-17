@@ -7,5 +7,5 @@ module.exports = {
   collectCoverage: true,
   coverageReporters: ["lcov", "text-summary", "text", "html"],
   coverageDirectory: "coverage",
-  setupFiles: ["<rootDir>/test/tools/copy_json_bd_test.ts"],
+  //setupFiles: ["<rootDir>/test/tools/copy_json_bd_test.ts"],
 };
