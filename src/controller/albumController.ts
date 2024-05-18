@@ -4,7 +4,7 @@ const albumModelImpl = new albumModel();
 
 async function GetAllAlbums(req, res) {
   try {
-    const albums = await albumModelImpl.GetAllAlbums();
+    const albums = await albumModelImpl.GetAllAlbums(req.query);
     res.status(200).json({
       status: "success",
       results: albums.length,
