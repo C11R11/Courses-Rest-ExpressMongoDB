@@ -29,7 +29,7 @@ async function GetAlbum(req, res, next) {
       data: album,
     });
   } catch (err) {
-    res.status(400).json({ status: "fail", message: err });
+    next(err)
   }
 }
 
@@ -45,11 +45,11 @@ const UpdateAlbum = async (req, res, next) => {
       data: result,
     });
   } catch (err) {
-    res.status(400).json({ status: "fail", message: err });
+     next(err);
   }
 };
 
-const CreatAlbum = async (req, res) => {
+const CreatAlbum = async (req, res, next) => {
   try {
     console.log("Controller, create album->", req.body);
 
@@ -61,19 +61,22 @@ const CreatAlbum = async (req, res) => {
       data: newAlbum,
     });
   } catch (err) {
-    res.status(400).json({ status: "fail", message: err });
+    next(err)
   }
 };
 
-const DeleteAlbum = async (req, res) => {
+const DeleteAlbum = async (req, res, next) => {
   try {
     const result = await albumModelImpl.DeleteAlbum(req.params.id);
+
+    if (result === null)
+      return next(new AppError("No tour found with the given ID", 404));
 
     res.status(200).json({
       status: "Ok",
     });
   } catch (err) {
-    res.status(400).json({ status: "fail", message: err });
+    next(err);
   }
 };
 

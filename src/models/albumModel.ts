@@ -116,6 +116,7 @@ class AlbumModel {
       const newModel = await this.albumModel.create(obj);
       return newModel;
     } catch (err) {
+      console.log("💣 ", err)
       throw err;
     }
   }
@@ -127,6 +128,7 @@ class AlbumModel {
       console.log(findModel);
       return findModel;
     } catch (err) {
+      console.log("💣 ", err);
       throw err;
     }
   }
