@@ -45,6 +45,15 @@ function startServer(port: number) {
   app.listen(port, "0.0.0.0", () => {
     console.log(`Music Api info :) http://localhost:${port}`);
   });
+
+  /**
+   * Uncaught exception such a loss database connection are handled here
+   */
+  process.on("uncaughtException", (err) => {
+    console.log(err.name, err.message);
+    console.log("unrecover error shutting down 💣 ");
+    process.exit(1);
+  });
 }
 
 module.exports = {

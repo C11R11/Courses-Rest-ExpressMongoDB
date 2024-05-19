@@ -10,13 +10,3 @@ const appModule = require("./app");
 const PORT = 3456;
 
 appModule.startServer(PORT);
-
-
-/**
- * Uncaught exception such a loss database connection are handled here
- */
-process.on("uncaughtException", (err) => {
-  console.log(err.name, err.message);
-  console.log("unrecover error shutting down 💣 ");
-  process.exit(1);
-});

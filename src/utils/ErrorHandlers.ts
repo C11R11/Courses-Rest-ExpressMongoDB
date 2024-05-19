@@ -48,7 +48,7 @@ export default (err, req, res, next) => {
       user_error: userError
     });
   } else if (process.env.NODE_ENV === "production") {
-      console.error("Error 💣 ", err);
+      console.error("production Error 💣 ", err);
 
       res.status(500).json({
         status: err.status,

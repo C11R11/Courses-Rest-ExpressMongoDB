@@ -17,3 +17,13 @@ export interface IAlbum {
   tracks: [String];
   year: Number;
 }
+
+//For user model and resources
+export interface IUser
+{
+  name: string;
+  email: string;
+  photo: string;
+  password: string;
+  confirmPassword: string;
+}
