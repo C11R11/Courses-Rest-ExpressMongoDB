@@ -1,3 +1,4 @@
+import AppError from "../utils/appError";
 import albumModel from "../models/albumModel";
 
 const albumModelImpl = new albumModel();
@@ -16,9 +17,13 @@ async function GetAllAlbums(req, res) {
   }
 }
 
-async function GetAlbum(req, res) {
+async function GetAlbum(req, res, next) {
   try {
     const album = await albumModelImpl.GetAlbum(req.params.id);
+
+    //no tour found
+    if(album.length == 0) return next(new AppError("No tour found with the given ID", 404))
+
     res.status(200).json({
       status: "success",
       data: album,
@@ -28,9 +33,13 @@ async function GetAlbum(req, res) {
   }
 }
 
-const UpdateAlbum = async (req, res) => {
+const UpdateAlbum = async (req, res, next) => {
   try {
     const result = await albumModelImpl.UpdateAlbum(req.params.id, req.body);
+
+    if (result.length == 0)
+      return next(new AppError("No tour found with the given ID", 404));
+
     res.status(200).json({
       status: "success",
       data: result,
@@ -59,6 +68,7 @@ const CreatAlbum = async (req, res) => {
 const DeleteAlbum = async (req, res) => {
   try {
     const result = await albumModelImpl.DeleteAlbum(req.params.id);
+
     res.status(200).json({
       status: "Ok",
     });
