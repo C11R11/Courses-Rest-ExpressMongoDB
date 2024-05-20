@@ -3,7 +3,7 @@ import userController from "../controller/userController"
 import authController from "../controller/authController";
 
 const { GetAllUsers } = userController;
-const { Signup } = authController;
+const { Signup, Login } = authController;
 
 const router = express.Router();
 
@@ -14,6 +14,7 @@ const router = express.Router();
  * at the end of the rest api development.
  */
 router.post("/signup", Signup); 
+router.post("/login", Login);
 
 router.route("/").get(GetAllUsers).post(Signup);
 //router.route("/:id").get(GetUser).patch(UpdateUser).delete(DeleteUser);

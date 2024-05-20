@@ -9,7 +9,7 @@ dotenv.config({ path: "./config.env" });
 let originalData;
 
 //This is important to simulate a productive running messages and such
-process.env.NODE_ENV = "production"
+process.env.NODE_ENV = "production" 
 
 console.log("Starting tests....");
 

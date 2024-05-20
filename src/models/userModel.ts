@@ -59,11 +59,37 @@ export default class UserModel {
 
   constructor() {}
 
-  public async CreateUser(obj: IAlbum) {
+  public async CreateUser(obj: IUser) {
     console.log("creating user....");
     try {
       const newModel = await UserModel.usersModel.create(obj);
       return newModel;
+    } catch (err) {
+      console.log("💣 ", err);
+      throw err;
+    }
+  }
+
+  public async GetUserEmail(email: String) {
+    console.log("GetAlbum user....");
+    try {
+      const findModel = await UserModel.usersModel
+        .find({ email: email })
+        .exec();
+      console.log(findModel);
+      return findModel;
+    } catch (err) {
+      console.log("💣 ", err);
+      throw err;
+    }
+  }
+
+  public async GetUser(id: String) {
+    console.log("GetAlbum user....");
+    try {
+      const findModel = await UserModel.usersModel.find({ _id: id }).exec();
+      console.log(findModel);
+      return findModel;
     } catch (err) {
       console.log("💣 ", err);
       throw err;
@@ -93,14 +119,10 @@ export default class UserModel {
 UserModel.userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
 
-  /**
-   * Here the rounds for the bcrypsjs library is 10 to be quicker to 
-   * process. Maybe for productions environments (or better hardware)
-   * this can be increcased
-   */
-  const rounds = 10
-  
-  this.password = await bcrypt.hash(this.password, rounds);
+  this.password = await bcrypt.hash(
+    this.password,
+    Number(process.env.PASS_ROUNDS).valueOf()
+  );
   // this will erase the confirmation email. This happens after validate
   // that the user already send the password and confirmation
   this.confirmPassword = undefined;
