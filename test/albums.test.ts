@@ -7,6 +7,8 @@ import { IAlbum } from "../src/types/models";
 dotenv.config({ path: "./config.env" });
 
 let originalData;
+const token =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NGNjNDY2OWI4M2I1MGExYWJmMWYyYyIsImlhdCI6MTcxNjMwNzA0NiwiZXhwIjoxNzI0MDgzMDQ2fQ.1EP3aw3_XqfNRN7fFM5X2k4VsD0xtIfsCgTSXKbebb0";
 
 //This is important to simulate a productive running messages and such
 process.env.NODE_ENV = "production" 
@@ -37,6 +39,7 @@ describe("Health checks", () => {
     return request(app)
       .get("/api/v2/albums/")
       .set("Accept", "application/json")
+      .set("Authorization", `Bearer ${token}`)
       .expect("Content-Type", /json/)
       .expect(200)
       .then((response) => {
@@ -67,12 +70,26 @@ describe("Album CRUD", () => {
   };
   const patched_name = "SupertestJestPatched" + crypto.randomUUID();
 
+    test("No token provided", async () => {
+      try {
+        const response = await request(app)
+          .post("/api/v2/albums/")
+          .send(fake_album)
+          .set("Accept", "application/json");
+        expect(response.headers["content-type"]).toMatch(/application\/json/);
+        expect(response.status).toBe(401);
+      } catch (err) {
+        console.log(err);
+      }
+    });
+
   test("POST a fake one", async () => {
     try {
       const response = await request(app)
         .post("/api/v2/albums/")
         .send(fake_album)
-        .set("Accept", "application/json");
+        .set("Accept", "application/json")
+        .set("Authorization", `Bearer ${token}`)
       expect(response.headers["content-type"]).toMatch(/application\/json/);
       expect(response.status).toBe(201);
       console.log("POST", response.body);
@@ -86,6 +103,7 @@ describe("Album CRUD", () => {
     return request(app)
       .get("/api/v2/albums/" + id_new)
       .set("Accept", "application/json")
+      .set("Authorization", `Bearer ${token}`)
       .expect("Content-Type", /json/)
       .expect(200)
       .then((response) => {
@@ -100,8 +118,9 @@ describe("Album CRUD", () => {
     return request(app)
       .get("/api/v2/albums/" + -1)
       .set("Accept", "application/json")
+      .set("Authorization", `Bearer ${token}`)
       .expect("Content-Type", /json/)
-      .expect(500)
+      .expect(500);
       // .then((response) => {
         // console.log("Get invalid album--->", response);
       // })
@@ -112,6 +131,7 @@ describe("Album CRUD", () => {
     return request(app)
       .patch("/api/v2/albums/" + -1)
       .set("Accept", "application/json")
+      .set("Authorization", `Bearer ${token}`)
       .expect("Content-Type", /json/)
       .expect(500);
   });
@@ -120,6 +140,7 @@ describe("Album CRUD", () => {
     return request(app)
       .patch("/api/v2/albums/" + id_new)
       .set("Accept", "application/json")
+      .set("Authorization", `Bearer ${token}`)
       .send({ title: patched_name })
       .expect("Content-Type", /json/)
       .expect(200)
@@ -136,6 +157,7 @@ describe("Album CRUD", () => {
     return request(app)
       .delete("/api/v2/albums/" + id_new)
       .set("Accept", "application/json")
+      .set("Authorization", `Bearer ${token}`)
       .expect("Content-Type", /json/)
       .expect(200);
   });
@@ -144,6 +166,7 @@ describe("Album CRUD", () => {
     return request(app)
       .delete("/api/v2/albums/" + -1)
       .set("Accept", "application/json")
+      .set("Authorization", `Bearer ${token}`)
       .expect("Content-Type", /json/)
       .expect(500);
   });
@@ -152,6 +175,7 @@ describe("Album CRUD", () => {
     return request(app)
       .get("/api/v2/albums/")
       .set("Accept", "application/json")
+      .set("Authorization", `Bearer ${token}`)
       .expect("Content-Type", /json/)
       .expect(200)
       .then((response) => {

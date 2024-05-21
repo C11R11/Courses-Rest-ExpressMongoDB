@@ -1,4 +1,4 @@
-import AppError from "../utils/appError";
+import {AppError} from "../utils/appError";
 import albumModel from "../models/albumModel";
 
 const albumModelImpl = new albumModel();

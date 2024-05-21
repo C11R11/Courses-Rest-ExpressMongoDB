@@ -85,7 +85,7 @@ export default class UserModel {
   }
 
   public async GetUser(id: String) {
-    console.log("GetAlbum user....");
+    console.log("GetUser....");
     try {
       const findModel = await UserModel.usersModel.find({ _id: id }).exec();
       console.log(findModel);

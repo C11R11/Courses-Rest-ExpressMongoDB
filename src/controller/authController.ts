@@ -1,4 +1,4 @@
-import AppError from "../utils/appError";
+import { AppError, AuthError} from "../utils/appError";
 import userModel from "../models/userModel";
 import { sign, verify, JwtPayload } from "jsonwebtoken";
 import bcrypt from "bcryptjs";
@@ -20,23 +20,23 @@ async function verifyToken(req, res, next) {
   ) token = req.headers.authorization.split(' ')[1]
 
   if (!token) {
-    return next(new AppError("Token not provied", 401))
+    return next(new AuthError("Token not provied"));
   }
   try {
     //verifiyng the token
     const payload = verify(token, process.env.JWT_PASS) as CustomJwtPayload;
 
     //verifiyng that the token user exists
-     const user = await userModelImpl.GetUser(payload.id);
-     //no tour found
-    if (user.length == 0)
-       return next(new AppError("No user found with the given ID", 401));
+      const user = await userModelImpl.GetUser(payload.id);
+    //  //no tour found
+     if (user.length == 0)
+        return next(new AuthError("No user found with the given ID"));
 
     //verifiung that the user password don't change
 
     next();
   } catch (error) {
-    return next(new AppError("Token not valid, login again 💣 ", 403))
+    return next(new AuthError("Token not valid, login again 💣 "));
     }
 }
 
@@ -69,19 +69,21 @@ const Login = async (req, res, next) => {
     //1) check email and password
     if (!email || !password) {
       return next(
-        new AppError("Please provided valid email and password", 400)
+        new AuthError("Please provided valid email and password")
       );
     }
 
     //2)Check if user exists and password
-    const user = await userModelImpl.GetUserEmail(email);
+    let user = await userModelImpl.GetUserEmail(email);
+    user = user[0]
+
     //no tour found
-    if (user.length == 0)
-      return next(new AppError("No user found with the given ID", 401));
+    if (typeof(user) === undefined)
+      return next(new AppError("Authorization error: No user found with the provided token", 401));
 
-    const checkPassword = await bcrypt.compare(password, user[0].password)
+    const checkPassword = await bcrypt.compare(password, user.password)
 
-    if (!checkPassword) return next(new AppError("Invalid password", 401));
+    if (!checkPassword) return next(new AuthError("Invalid password"));
     
     //3) send token back
     const token = sign({ id: user._id }, process.env.JWT_PASS, {
@@ -97,17 +99,17 @@ const Login = async (req, res, next) => {
   }
 };
 
-async function GetAlbum(req, res, next) {
+async function GetUser(req, res, next) {
   try {
-    const album = await userModelImpl.GetUser(req.params.id);
+    const user = await userModelImpl.GetUser(req.params.id)[0];
 
     //no tour found
-    if (album.length == 0)
-      return next(new AppError("No tour found with the given ID", 404));
+    if (typeof user === undefined)
+      return next(new AuthError("No tour found with the given ID"));
 
     res.status(200).json({
       status: "success",
-      data: album,
+      data: user,
     });
   } catch (err) {
     next(err);

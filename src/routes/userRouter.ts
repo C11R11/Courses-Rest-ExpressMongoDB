@@ -2,7 +2,7 @@ import express from "express";
 import userController from "../controller/userController"
 import authController from "../controller/authController";
 
-const { GetAllUsers } = userController;
+const { GetAllUsers, GetUser } = userController;
 const { Signup, Login, verifyToken } = authController;
 
 const router = express.Router();
@@ -17,6 +17,6 @@ router.post("/signup",  Signup);
 router.post("/login", Login);
 
 router.route("/").get(verifyToken, GetAllUsers).post(Signup);
-//router.route("/:id").get(GetUser).patch(UpdateUser).delete(DeleteUser);
+router.route("/:id").get(verifyToken, GetUser);//.patch(UpdateUser).delete(DeleteUser);
 
 export = router

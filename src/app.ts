@@ -4,7 +4,7 @@ import morgan from "morgan";
 import albumsRouter from "./routes/albumRouter";
 import usersRouter from "./routes/userRouter";
 import dotenv from "dotenv";
-import AppError from "./utils/appError";
+import {AppError} from "./utils/appError";
 import ErrorHandlers from "./utils/ErrorHandlers";
 
 dotenv.config({ path: "./config.env" });

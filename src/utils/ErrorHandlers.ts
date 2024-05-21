@@ -1,5 +1,3 @@
-import AppError from "../utils/appError";
-
 /**
  * This function parses the error and see if can extract information 
  * to provide to end users
@@ -50,7 +48,7 @@ export default (err, req, res, next) => {
   } else if (process.env.NODE_ENV === "production") {
       console.error("production Error 💣 ", err);
 
-      res.status(500).json({
+      res.status(err.statusCode).json({
         status: err.status,
         message: err.message,
       });
