@@ -47,10 +47,21 @@ const Signup = async (req, res, next) => {
     const newUser = await userModelImpl.CreateUser(req.body);
     console.log("after new album");
 
+    newUser.password = undefined;
     //jwt sign
     const token = sign({ id: newUser._id }, process.env.JWT_PASS, {
       expiresIn: process.env.JWT_EXPIRES_IN,
     });
+
+    const cookieOptions = {
+      expires: new Date(
+        Date.now() + Number(process.env.JWT_COOKIE_EXPIRES) * 24 * 60 * 60 * 1000
+      ),
+      httpOnly: true,
+    };
+    //if (process.env.NODE_ENV === "production") cookieOptions.secure = true;
+
+    res.cookie("jwt", token, cookieOptions);
 
     res.status(201).json({
       status: "success",

@@ -27,7 +27,8 @@ async function GetUser(req, res, next) {
 
     user = user[0];
      console.log("user before delete---", user);
-    delete user["password"];
+    
+    user.password = undefined
 
     console.log("user after delete---", user)
 
