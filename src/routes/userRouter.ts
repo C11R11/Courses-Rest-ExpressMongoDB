@@ -3,7 +3,7 @@ import userController from "../controller/userController"
 import authController from "../controller/authController";
 
 const { GetAllUsers } = userController;
-const { Signup, Login } = authController;
+const { Signup, Login, verifyToken } = authController;
 
 const router = express.Router();
 
@@ -13,10 +13,10 @@ const router = express.Router();
  * resorce. This route will become one of the no secure endpoints
  * at the end of the rest api development.
  */
-router.post("/signup", Signup); 
+router.post("/signup",  Signup); 
 router.post("/login", Login);
 
-router.route("/").get(GetAllUsers).post(Signup);
+router.route("/").get(verifyToken, GetAllUsers).post(Signup);
 //router.route("/:id").get(GetUser).patch(UpdateUser).delete(DeleteUser);
 
 export = router

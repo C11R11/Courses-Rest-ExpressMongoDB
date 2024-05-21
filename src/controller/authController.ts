@@ -1,9 +1,45 @@
 import AppError from "../utils/appError";
 import userModel from "../models/userModel";
-import { sign } from "jsonwebtoken";
+import { sign, verify, JwtPayload } from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 
+interface CustomJwtPayload extends JwtPayload {
+  id: string
+  email:string
+}
+
 const userModelImpl = new userModel();
+
+async function verifyToken(req, res, next) {
+  let token
+
+  console.log(req.headers)
+
+  if(req.headers.authorization &&
+    req.headers.authorization.startsWith('Bearer')
+  ) token = req.headers.authorization.split(' ')[1]
+
+  if (!token) {
+    return next(new AppError("Token not provied", 401))
+  }
+  try {
+    //verifiyng the token
+    const payload = verify(token, process.env.JWT_PASS) as CustomJwtPayload;
+
+    //verifiyng that the token user exists
+     const user = await userModelImpl.GetUser(payload.id);
+     //no tour found
+    if (user.length == 0)
+       return next(new AppError("No user found with the given ID", 401));
+
+    //verifiung that the user password don't change
+
+    next();
+  } catch (error) {
+    return next(new AppError("Token not valid, login again 💣 ", 403))
+    }
+}
+
 const Signup = async (req, res, next) => {
   try {
     console.log("Controller, create album->", req.body);
@@ -78,4 +114,4 @@ async function GetAlbum(req, res, next) {
   }
 }
 
-export default { Signup, Login };
+export default { Signup, Login, verifyToken };
