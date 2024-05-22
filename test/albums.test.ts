@@ -7,8 +7,8 @@ import { IAlbum } from "../src/types/models";
 dotenv.config({ path: "./config.env" });
 
 let originalData;
-const token =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NGNjNDY2OWI4M2I1MGExYWJmMWYyYyIsImlhdCI6MTcxNjMwNzA0NiwiZXhwIjoxNzI0MDgzMDQ2fQ.1EP3aw3_XqfNRN7fFM5X2k4VsD0xtIfsCgTSXKbebb0";
+
+const token = "Get-a-valid-test-from-the-express-api"
 
 //This is important to simulate a productive running messages and such
 process.env.NODE_ENV = "production" 
