@@ -18,7 +18,8 @@ This includes (mainly):
 Also added: 
 
 - Testing practices with Jest and Superuser
-- Docker mongo container (to do)
+- Docker mongo container
+- 
 # Source
 
 # Notes
