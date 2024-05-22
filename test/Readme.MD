@@ -1,1 +1,3 @@
-https://stackoverflow.com/questions/42827054/how-do-i-run-a-single-test-using-jest
+# Test suites
+
+Given the scope of this project, all tests were focused on the albums resource, resulting in some other endpoints being left out of coverage
